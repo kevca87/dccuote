@@ -1,18 +1,82 @@
-import type { DailyQuoteProps } from "@/views/DailyQuoteView"
-import DailyQuote from "@/views/DailyQuoteView"
+import type { DailyQuoteProps } from "@/views/DailyQuoteView";
+import DailyQuote from "@/views/DailyQuoteView";
+import { useEffect, useState } from "react";
 
-function App() {
-  const quote: DailyQuoteProps = {
-    quote: "¿Final? No este no es el final de la jornada, la muerte solo es otro camino que todos recorren. La cortina de lluvia gris del mundo se abre y se transforma en plata y cristal, despues lo ves. Blancas costas y mas alla un pais lejano y verde, a la luz de un amanecer.",
-    author: "Gandalf",
-    tags: ["movies", "fantasy", "inspiration", "lotr"]
+// Generic GET utility
+export async function apiFetch(endpoint: string, options = {}) : Promise<any> {
+  const baseUrl = "https://api.example.com";
+  const url = `${baseUrl}${endpoint}`;
+
+  const defaultOptions = {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    ...options,
   };
 
+  try {
+    const res = await fetch(url, defaultOptions);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`API error: ${res.status} ${errorText}`);
+    }
+    return await res.json();
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    throw err;
+  }
+}
+
+function mockFetchDailyQuote(): Promise<any> {
+//   const json = `{
+//   "id": "1",
+//   "quote": "Debo mantenerme sereno para no caer en la locura.",
+//   "character": { "id": "1", "name": "Gato con botas" },
+//   "source": "Shrek 2",
+//   "tags": [
+//     { "id": "1", "name": "movies" }
+//   ]
+// }`;
+  const json = `{
+  "id": "3",
+  "quote": "No soy un pesimista Tulio, solo soy un optimista bien informado.",
+  "character": { "id": "3", "name": "Bodoque" },
+  "source": "31 Minutos",
+  "tags": [
+    { "id": "3", "name": "tv" },
+    { "id": "4", "name": "comedy" },
+    { "id": "5", "name": "kids" },
+    { "id": "6", "name": "chile" }
+  ]
+}`;
+  const quote: DailyQuoteProps = JSON.parse(json) as DailyQuoteProps;
+  return Promise.resolve(quote);
+}
+
+async function fetchDailyQuote(quoteId: string): Promise<DailyQuoteProps> {
+  // return apiFetch(`/quotes/${quoteId}`);
+  return mockFetchDailyQuote();
+}
+
+function App() {
+  const [quote, setQuote] = useState<DailyQuoteProps | null>(null);
+
+  useEffect(() => {
+    fetchDailyQuote("3")
+      .then(setQuote)
+      .catch((error) => {
+        console.error("Failed to fetch daily quote:", error);
+      });
+  }, []);
+  if (!quote) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
       <DailyQuote {...quote} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
