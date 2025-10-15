@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 
 import { Combobox } from "@/components/ui/combobox";
 import type { ComboboxOptions } from "@/components/ui/combobox";
+import { apiFetch } from "@/api";
 
 const characters: ComboboxOptions[] = [
   {
@@ -34,16 +35,26 @@ const characters: ComboboxOptions[] = [
 ];
 
 function fetchCharacters() {
-    return Promise.resolve(characters);
+    // return Promise.resolve(characters);
+    return apiFetch("/characters");
 }
 
+function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
+    return characters.map((char) => ({
+        value: char.id,
+        label: char.name,
+    }));
+}
 
 export default function NewQuoteForm() {
   const [selectedCharacter, setSelectedCharacter] = useState<ComboboxOptions>();
   const [characters, setCharacters] = useState<ComboboxOptions[]>([]);
 
   useEffect(() => {
-    fetchCharacters().then((chars) => setCharacters(chars));
+    fetchCharacters()
+    .then((chars) => {
+        setCharacters(mapToComboboxOptions(chars));
+    });
   }, []);
   
   function handleSelect(option: ComboboxOptions) {
