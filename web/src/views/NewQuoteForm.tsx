@@ -35,15 +35,15 @@ const characters: ComboboxOptions[] = [
 ];
 
 function fetchCharacters() {
-    // return Promise.resolve(characters);
-    return apiFetch("/characters");
+  // return Promise.resolve(characters);
+  return apiFetch("/characters");
 }
 
 function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
-    return characters.map((char) => ({
-        value: char.id,
-        label: char.name,
-    }));
+  return characters.map((char) => ({
+    value: char.id,
+    label: char.name,
+  }));
 }
 
 export default function NewQuoteForm() {
@@ -51,12 +51,11 @@ export default function NewQuoteForm() {
   const [characters, setCharacters] = useState<ComboboxOptions[]>([]);
 
   useEffect(() => {
-    fetchCharacters()
-    .then((chars) => {
-        setCharacters(mapToComboboxOptions(chars));
+    fetchCharacters().then((chars) => {
+      setCharacters(mapToComboboxOptions(chars));
     });
   }, []);
-  
+
   function handleSelect(option: ComboboxOptions) {
     setSelectedCharacter(option);
   }
