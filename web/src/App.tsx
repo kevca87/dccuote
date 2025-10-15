@@ -1,32 +1,7 @@
 import type { DailyQuoteProps } from "@/views/DailyQuoteView";
 import DailyQuote from "@/views/DailyQuoteView";
 import { useEffect, useState } from "react";
-
-// Generic GET utility
-export async function apiFetch(endpoint: string, options = {}) : Promise<any> {
-  const baseUrl = "https://api.example.com";
-  const url = `${baseUrl}${endpoint}`;
-
-  const defaultOptions = {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    ...options,
-  };
-
-  try {
-    const res = await fetch(url, defaultOptions);
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`API error: ${res.status} ${errorText}`);
-    }
-    return await res.json();
-  } catch (err) {
-    console.error("Fetch failed:", err);
-    throw err;
-  }
-}
+import { apiFetch } from "./api";
 
 function mockFetchDailyQuote(): Promise<any> {
 //   const json = `{
