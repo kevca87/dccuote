@@ -25,3 +25,10 @@ export async function apiFetch(endpoint: string, options = {}) : Promise<any> {
     throw err;
   }
 }
+
+export async function apiPost(endpoint: string, data: any) : Promise<any> {
+    return apiFetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify(data),
+    });
+}

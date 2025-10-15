@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 
 import { Combobox } from "@/components/ui/combobox";
 import type { ComboboxOptions } from "@/components/ui/combobox";
-import { apiFetch } from "@/api";
+import { apiFetch, apiPost } from "@/api";
 
 const characters: ComboboxOptions[] = [
   {
@@ -47,8 +47,12 @@ function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
 }
 
 export default function NewQuoteForm() {
-  const [selectedCharacter, setSelectedCharacter] = useState<ComboboxOptions>();
   const [characters, setCharacters] = useState<ComboboxOptions[]>([]);
+
+  const [selectedCharacter, setSelectedCharacter] = useState<ComboboxOptions>();
+  const [quote, setQuote] = useState("");
+  const [source, setSource] = useState("");
+  const [tags, setTags] = useState("");
 
   useEffect(() => {
     fetchCharacters().then((chars) => {
@@ -69,12 +73,29 @@ export default function NewQuoteForm() {
     handleSelect(newCharacter);
   }
 
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    // All values are in state:
+    // quote, selectedCharacter, source, tags
+    const plainTags = tags.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
+    const formData = { quote, character: selectedCharacter?.label, source, tags: plainTags }
+    console.log(formData);
+    apiPost("/quotes/add", formData)
+      .then((response) => {
+        console.log("Quote added successfully:", response);
+        // Optionally reset the form or close the dialog here
+      })
+      .catch((error) => {
+        console.error("Failed to add quote:", error);
+      });
+  }
+
   return (
     <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">Open Dialog</Button>
+      </DialogTrigger>
       <form>
-        <DialogTrigger asChild>
-          <Button variant="outline">Open Dialog</Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Nueva frase</DialogTitle>
@@ -85,7 +106,11 @@ export default function NewQuoteForm() {
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Textarea placeholder="No soy un pesimista Tulio, solo soy un optimista bien informado." />
+              <Textarea
+                value={quote}
+                onChange={(e) => setQuote(e.target.value)}
+                placeholder="No soy un pesimista Tulio, solo soy un optimista bien informado."
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="character">Personaje</Label>
@@ -99,18 +124,30 @@ export default function NewQuoteForm() {
             </div>
             <div className="grid gap-3">
               <Label htmlFor="fuente">Fuente</Label>
-              <Input id="fuente" name="fuente" placeholder="31 Minutos" />
+              <Input
+                id="fuente"
+                name="fuente"
+                placeholder="31 Minutos"
+                value={source}
+                onChange={(e) => setSource(e.target.value)}
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="tags">Etiquetas</Label>
-              <Input id="tags" name="tags" placeholder="chile, humor, tv" />
+              <Input
+                id="tags"
+                name="tags"
+                placeholder="chile, humor, tv"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+              />
             </div>
           </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button type="submit">Añadir</Button>
+            <Button onClick={handleSubmit}>Añadir</Button>
           </DialogFooter>
         </DialogContent>
       </form>
