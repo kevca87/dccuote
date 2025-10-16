@@ -22,6 +22,7 @@ import { apiFetch, apiPost } from "@/api";
 import { AlertCircleIcon } from "lucide-react";
 
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 function fetchCharacters() {
   return apiFetch("/characters");
@@ -35,6 +36,8 @@ function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
 }
 
 export default function NewQuoteForm() {
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [submitResult, setSubmitResult] = useState<
     { success: true; data: any } | { success: false; error: string } | null
@@ -79,7 +82,6 @@ export default function NewQuoteForm() {
     characters.push(newCharacter);
     handleSelect(newCharacter);
   }
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitResult(null);
@@ -101,7 +103,7 @@ export default function NewQuoteForm() {
           action: {
             label: "Ver",
             onClick: () => {
-              window.location.href = `/quotes/${response.id}`;
+              navigate(`/quotes/${response.id}`);
             },
           },
         });
