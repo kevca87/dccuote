@@ -1,64 +1,18 @@
-import type { Quote } from "@/types/Quote";
-import QuoteView from "@/views/QuoteView";
-import NavBar from "@/components/NavBar";
-import { useEffect, useState } from "react";
+import { Routes, Route, Link } from 'react-router-dom'
+import QuotesGrid from './views/QuotesGrid'
+import DailyQuote from './views/DailyQuote'
+import NavBar from './components/NavBar'
 import { Toaster } from "@/components/ui/sonner"
-import { apiFetch } from "./api";
 
-// TODO: Add fields validation
-// TODO: Add QuoteView to see a single quote by id (Add react-router)
-
-function mockFetchDailyQuote(): Promise<any> {
-//   const json = `{
-//   "id": "1",
-//   "quote": "Debo mantenerme sereno para no caer en la locura.",
-//   "character": { "id": "1", "name": "Gato con botas" },
-//   "source": "Shrek 2",
-//   "tags": [
-//     { "id": "1", "name": "movies" }
-//   ]
-// }`;
-  const json = `{
-  "id": "3",
-  "quote": "No soy un pesimista Tulio, solo soy un optimista bien informado.",
-  "character": { "id": "3", "name": "Bodoque" },
-  "source": "31 Minutos",
-  "tags": [
-    { "id": "3", "name": "tv" },
-    { "id": "4", "name": "comedy" },
-    { "id": "5", "name": "kids" },
-    { "id": "6", "name": "chile" }
-  ]
-}`;
-  const quote: Quote = JSON.parse(json) as Quote;
-  return Promise.resolve(quote);
-}
-
-async function fetchDailyQuote(): Promise<Quote> {
-  return apiFetch(`/quotes/daily`);
-  // return mockFetchDailyQuote();
-}
-
-function App() {
-  const [quote, setQuote] = useState<Quote | null>(null);
-
-  useEffect(() => {
-    fetchDailyQuote()
-      .then(setQuote)
-      .catch((error) => {
-        console.error("Failed to fetch daily quote:", error);
-      });
-  }, []);
-  if (!quote) {
-    return <div>Loading...</div>;
-  }
+export default function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
+    <div className="h-svh flex flex-col">
       <Toaster position="top-center"/>
       <NavBar />
-      <QuoteView {...quote} />
+      <Routes>
+        <Route path="/" element={<DailyQuote />} />
+        <Route path="/quotes" element={<QuotesGrid />} />
+      </Routes>
     </div>
-  );
+  )
 }
-
-export default App;
