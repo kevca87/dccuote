@@ -1,9 +1,9 @@
 import type { Quote } from "@/types/Quote";
 import QuoteView from "@/views/QuoteView";
-import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
-import { Toaster } from "@/components/ui/sonner"
+import { Spinner } from "@/components/ui/spinner"
 import { apiFetch } from "@/api";
+
 
 // TODO: Add fields validation
 // TODO: Add QuoteView to see a single quote by id (Add react-router)
@@ -50,7 +50,7 @@ function DailyQuote() {
       });
   }, []);
   if (!quote) {
-    return <div>Loading...</div>;
+    return null;
   }
   return (
       <QuoteView {...quote} />

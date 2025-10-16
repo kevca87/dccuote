@@ -1,4 +1,5 @@
 import type{ Quote } from "@/types/Quote";
+
 function QuoteView({ quote , character, source, tags }: Quote) {
   return (
     <div className="flex flex-col items-center justify-center grow">
