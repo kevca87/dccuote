@@ -16,8 +16,8 @@ export async function apiFetch(endpoint: string, options = {}) : Promise<any> {
   try {
     const res = await fetch(url, defaultOptions);
     if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(`API error: ${res.status} ${errorText}`);
+      const errorObj = await res.json();
+      throw new Error(`${errorObj.error}`);
     }
     return await res.json();
   } catch (err) {

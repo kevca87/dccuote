@@ -2,6 +2,7 @@ import type { DailyQuoteProps } from "@/views/DailyQuoteView";
 import DailyQuote from "@/views/DailyQuoteView";
 import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
+import { Toaster } from "@/components/ui/sonner"
 
 function mockFetchDailyQuote(): Promise<any> {
 //   const json = `{
@@ -49,6 +50,7 @@ function App() {
   }
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
+      <Toaster position="top-center"/>
       <NavBar />
       <DailyQuote {...quote} />
     </div>

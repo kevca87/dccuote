@@ -17,25 +17,13 @@ import { useEffect, useState } from "react";
 
 import { Combobox } from "./ui/combobox";
 import type { ComboboxOptions } from "./ui/combobox";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { apiFetch, apiPost } from "@/api";
+import { AlertCircleIcon } from "lucide-react";
 
-const characters: ComboboxOptions[] = [
-  {
-    value: "Bodoque",
-    label: "Bodoque",
-  },
-  {
-    value: "Tulio Triviño",
-    label: "Tulio Triviño",
-  },
-  {
-    value: "Juanin Juan Harry",
-    label: "Juanin Juan Harry",
-  },
-];
+import { toast } from "sonner";
 
 function fetchCharacters() {
-  // return Promise.resolve(characters);
   return apiFetch("/characters");
 }
 
@@ -47,10 +35,15 @@ function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
 }
 
 export default function NewQuoteForm() {
+  const [open, setOpen] = useState(false);
+  const [submitResult, setSubmitResult] = useState<
+    { success: true; data: any } | { success: false; error: string } | null
+  >(null);
+
   const [characters, setCharacters] = useState<ComboboxOptions[]>([]);
 
-  const [selectedCharacter, setSelectedCharacter] = useState<ComboboxOptions>();
   const [quote, setQuote] = useState("");
+  const [selectedCharacter, setSelectedCharacter] = useState<ComboboxOptions>();
   const [source, setSource] = useState("");
   const [tags, setTags] = useState("");
 
@@ -59,6 +52,20 @@ export default function NewQuoteForm() {
       setCharacters(mapToComboboxOptions(chars));
     });
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      setSubmitResult(null);
+      resetFields();
+    }
+  }, [open]);
+
+  function resetFields() {
+    setQuote("");
+    setSelectedCharacter(undefined);
+    setSource("");
+    setTags("");
+  }
 
   function handleSelect(option: ComboboxOptions) {
     setSelectedCharacter(option);
@@ -75,23 +82,43 @@ export default function NewQuoteForm() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // All values are in state:
-    // quote, selectedCharacter, source, tags
-    const plainTags = tags.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
-    const formData = { quote, character: selectedCharacter?.label, source, tags: plainTags }
-    console.log(formData);
+    setSubmitResult(null);
+    const plainTags = tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+    const formData = {
+      quote,
+      character: selectedCharacter?.label,
+      source,
+      tags: plainTags,
+    };
     apiPost("/quotes/add", formData)
       .then((response) => {
-        console.log("Quote added successfully:", response);
-        // Optionally reset the form or close the dialog here
+        setSubmitResult({ success: true, data: response });
+        toast.success("Frase añadida exitosamente", {
+          description: "¿Deseas ver la nueva frase?",
+          action: {
+            label: "Ver",
+            onClick: () => {
+              window.location.href = `/quotes/${response.id}`;
+            },
+          },
+        });
+        setOpen(false);
+        resetFields();
       })
       .catch((error) => {
+        setSubmitResult({
+          success: false,
+          error: error?.message ?? "Error desconocido",
+        });
         console.error("Failed to add quote:", error);
       });
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Nueva frase</Button>
       </DialogTrigger>
@@ -142,6 +169,15 @@ export default function NewQuoteForm() {
                 onChange={(e) => setTags(e.target.value)}
               />
             </div>
+            {submitResult?.success === false && (
+              <Alert variant="destructive">
+                <AlertCircleIcon />
+                <AlertTitle>Error al añadir la frase.</AlertTitle>
+                <AlertDescription>
+                  <p>{submitResult.error}.</p>
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
           <DialogFooter>
             <DialogClose asChild>
