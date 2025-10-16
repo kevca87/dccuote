@@ -13,9 +13,14 @@ import NewQuoteForm from "./NewQuoteForm";
 export default function NavBar() {
   return (
     <NavigationMenu className="ml-auto">
-    <NavigationMenuList className="p-4">
+      <NavigationMenuList className="p-4">
         <NavigationMenuItem>
-            <NewQuoteForm />
+          <NewQuoteForm />
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink href="/quotes" className="text-lg font-bold">
+            Frases
+          </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

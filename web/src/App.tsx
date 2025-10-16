@@ -1,5 +1,5 @@
-import type { DailyQuoteProps } from "@/views/DailyQuoteView";
-import DailyQuote from "@/views/DailyQuoteView";
+import type { Quote } from "@/types/Quote";
+import QuoteView from "@/views/QuoteView";
 import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner"
@@ -30,17 +30,17 @@ function mockFetchDailyQuote(): Promise<any> {
     { "id": "6", "name": "chile" }
   ]
 }`;
-  const quote: DailyQuoteProps = JSON.parse(json) as DailyQuoteProps;
+  const quote: Quote = JSON.parse(json) as Quote;
   return Promise.resolve(quote);
 }
 
-async function fetchDailyQuote(): Promise<DailyQuoteProps> {
+async function fetchDailyQuote(): Promise<Quote> {
   return apiFetch(`/quotes/daily`);
   // return mockFetchDailyQuote();
 }
 
 function App() {
-  const [quote, setQuote] = useState<DailyQuoteProps | null>(null);
+  const [quote, setQuote] = useState<Quote | null>(null);
 
   useEffect(() => {
     fetchDailyQuote()
@@ -56,7 +56,7 @@ function App() {
     <div className="flex min-h-svh flex-col items-center justify-center">
       <Toaster position="top-center"/>
       <NavBar />
-      <DailyQuote {...quote} />
+      <QuoteView {...quote} />
     </div>
   );
 }
