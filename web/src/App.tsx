@@ -1,7 +1,7 @@
 import type { DailyQuoteProps } from "@/views/DailyQuoteView";
 import DailyQuote from "@/views/DailyQuoteView";
+import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
-import { apiFetch } from "./api";
 
 function mockFetchDailyQuote(): Promise<any> {
 //   const json = `{
@@ -49,6 +49,7 @@ function App() {
   }
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
+      <NavBar />
       <DailyQuote {...quote} />
     </div>
   );
