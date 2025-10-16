@@ -34,3 +34,12 @@ def tags_get() -> list:
     Returns all tags
     """
     return tags
+
+def tag_id_get_by_name(tag_name: str) -> str | None:
+    """
+    Returns a tag id by name or None if not found
+    """
+    for t in tags:
+        if t["name"] == tag_name:
+            return t["id"]
+    return None

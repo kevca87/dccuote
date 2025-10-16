@@ -1,4 +1,5 @@
 from .tmp_db import *
+from .tags import tag_add
 
 def quote_daily() -> dict:
     """
@@ -63,6 +64,31 @@ def quotes_get(character_filter: str = None, tags_filter: list = []) -> list:
         filtered = aux
     return filtered
 
+def quote_get_by_id(quote_id: str) -> dict | None:
+    """
+    Returns a quote by its ID, or None if not found
+    """
+    quote = next((q for q in quotes if q["id"] == quote_id), None)
+    if quote is None:
+        return None
+
+    character = next((c for c in characters if c["id"] == quote["character_id"]), None)
+    
+    tags_labels = []
+    for qt in quote_tags:
+        if qt["quote_id"] == quote["id"]:
+            tag = next((t for t in tags if t["id"] == qt["tag_id"]), None)
+            if tag:
+                tags_labels.append(tag)
+    
+    return {
+        "id": quote["id"],
+        "quote": quote["quote"],
+        "character": character,
+        "source": quote["source"],
+        "tags": tags_labels
+    }
+
 def quote_add(quote: dict) -> None:
     """
     Adds a new quote to the quotes list
@@ -92,6 +118,8 @@ def quote_add(quote: dict) -> None:
                 if tag["name"] == tag_name:
                     tag_id = tag["id"]
                     break
+            if tag_id is None:
+                tag_id = tag_add(tag_name)
             quote_tags.append({ "quote_id": new_quote_id, "tag_id": tag_id })
     
     return {
@@ -102,7 +130,7 @@ def quote_add(quote: dict) -> None:
         "tags": quote.get("tags", [])
     }
 
-def quote_validate(quote: dict) -> bool:
+def quote_validate(quote: dict) -> dict:
     """
     Validates the structure of a quote
     """
@@ -110,39 +138,30 @@ def quote_validate(quote: dict) -> bool:
     # Check for required fields
     required_fields = {"quote", "character", "source"}
     if not all(field in quote for field in required_fields):
-        return False
+        return {"is_valid": False, "error": "Faltan campos obligatorios"}
     
     # Validate the quote text
     if not isinstance(quote["quote"], str) or not quote["quote"].strip():
-        return False
-    
+        return {"is_valid": False, "error": "El texto de la cita no es válido"}
+
     # Validate the character
     if not isinstance(quote["character"], str) or not quote["character"].strip():
-        return False
-
-    character_id = None
-    for char in characters:
-        if char["name"] == quote["character"]:
-            character_id = char["id"]
-            break
-    if character_id is None:
-        return False
+        return {"is_valid": False, "error": "El nombre del personaje no es válido"}
     
     # Validate the source
     if not isinstance(quote["source"], str) or not quote["source"].strip():
-        return False
+        return {"is_valid": False, "error": "La fuente no es válida"}
 
     # Validate tags if present
     if "tags" in quote:
+        new_tags = []
         if not isinstance(quote["tags"], list):
-            return False
+            return {"is_valid": False, "error": "Los tags deben ser una lista"}
         for tag in quote["tags"]:
             if not isinstance(tag, str) or not tag.strip():
-                return False
-            if tag not in [t["name"] for t in tags]:
-                return False
+                return {"is_valid": False, "error": "Los tags deben ser cadenas no vacías"}
 
-    return True
+    return {"is_valid": True}
 
 def quote_exists(quote_text: str) -> bool:
     """
@@ -164,3 +183,16 @@ def quote_delete(quote_id: str) -> None:
     
     quote_tags = [qt for qt in quote_tags if qt["quote_id"] != quote_id]
     quotes = [q for q in quotes if q["id"] != quote_id]
+
+def quote_tag_exists(quote_id: str, tag_id: str) -> bool:
+    """
+    Checks if a tag is already associated with a quote
+    """
+    return any(qt for qt in quote_tags if qt["quote_id"] == quote_id and qt["tag_id"] == tag_id)
+
+def quote_tag_add(quote_id: str, tag_id: str) -> None:
+    """
+    Adds a tag to a quote
+    """
+    if not quote_tag_exists(quote_id, tag_id):
+        quote_tags.append({ "quote_id": quote_id, "tag_id": tag_id })
