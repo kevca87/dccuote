@@ -9,14 +9,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 
 import { useEffect, useState } from "react";
 
-import { Combobox } from "@/components/ui/combobox";
-import type { ComboboxOptions } from "@/components/ui/combobox";
+import { Combobox } from "./ui/combobox";
+import type { ComboboxOptions } from "./ui/combobox";
 import { apiFetch, apiPost } from "@/api";
 
 const characters: ComboboxOptions[] = [
@@ -93,7 +93,7 @@ export default function NewQuoteForm() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Open Dialog</Button>
+        <Button variant="outline">Nueva frase</Button>
       </DialogTrigger>
       <form>
         <DialogContent className="sm:max-w-[425px]">
