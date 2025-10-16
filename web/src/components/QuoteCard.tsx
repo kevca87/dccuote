@@ -28,7 +28,8 @@ export default function QuoteCard({
       <CardHeader className="m-1">
         <CardTitle>{quote}</CardTitle>
         <CardDescription className="font-medium">
-          - {character.name}
+          <div>- {character.name}</div>
+          <div>{character.name === source ? "" : `${source}`}</div>
         </CardDescription>
       </CardHeader>
       <CardFooter className="overflow-x-auto">

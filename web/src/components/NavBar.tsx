@@ -18,7 +18,17 @@ export default function NavBar() {
       <NavigationMenuList className="p-4">
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/quotes">Todas las frases</Link>
+            <Link to="/quotes">Frases</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link to="/characters">Personajes</Link>
+          </NavigationMenuLink>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link to="/tags">Etiquetas</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
