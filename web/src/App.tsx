@@ -3,6 +3,10 @@ import DailyQuote from "@/views/DailyQuoteView";
 import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner"
+import { apiFetch } from "./api";
+
+// TODO: Add fields validation
+// TODO: Add QuoteView to see a single quote by id (Add react-router)
 
 function mockFetchDailyQuote(): Promise<any> {
 //   const json = `{
@@ -30,16 +34,16 @@ function mockFetchDailyQuote(): Promise<any> {
   return Promise.resolve(quote);
 }
 
-async function fetchDailyQuote(quoteId: string): Promise<DailyQuoteProps> {
-  // return apiFetch(`/quotes/${quoteId}`);
-  return mockFetchDailyQuote();
+async function fetchDailyQuote(): Promise<DailyQuoteProps> {
+  return apiFetch(`/quotes/daily`);
+  // return mockFetchDailyQuote();
 }
 
 function App() {
   const [quote, setQuote] = useState<DailyQuoteProps | null>(null);
 
   useEffect(() => {
-    fetchDailyQuote("3")
+    fetchDailyQuote()
       .then(setQuote)
       .catch((error) => {
         console.error("Failed to fetch daily quote:", error);
