@@ -35,14 +35,11 @@ function mapToComboboxOptions(characters: any[]): ComboboxOptions[] {
   }));
 }
 
-export default function NewQuoteForm() {
+export default function NewQuoteForm(
+  {submitResult, setSubmitResult}: { submitResult: any; setSubmitResult: any }) {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const [submitResult, setSubmitResult] = useState<
-    { success: true; data: any } | { success: false; error: string } | null
-  >(null);
-
   const [characters, setCharacters] = useState<ComboboxOptions[]>([]);
 
   const [quote, setQuote] = useState("");

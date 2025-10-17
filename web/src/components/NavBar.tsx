@@ -11,8 +11,10 @@ import {
 } from "./ui/navigation-menu";
 import NewQuoteForm from "./NewQuoteForm";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-export default function NavBar() {
+export default function NavBar({newQuoteSubmitResult, setNewQuoteSubmitResult}:
+  { newQuoteSubmitResult: any; setNewQuoteSubmitResult: any }) {
   return (
     <NavigationMenu className="ml-auto flex-none">
       <NavigationMenuList className="p-4">
@@ -37,7 +39,7 @@ export default function NavBar() {
           </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NewQuoteForm />
+          <NewQuoteForm submitResult={newQuoteSubmitResult} setSubmitResult={setNewQuoteSubmitResult} />
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
