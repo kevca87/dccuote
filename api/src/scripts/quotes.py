@@ -19,7 +19,7 @@ def quote_daily() -> dict:
     return {
         "id": quote["id"],
         "quote": quote["quote"],
-        "character": character["name"],
+        "character": character,
         "source": quote["source"],
         "tags": tags_labels
     }

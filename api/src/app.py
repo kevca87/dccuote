@@ -22,7 +22,7 @@ CORS(app)
                 'application/json': {
                     "id": "4",
                     "quote": "Do what you can, with what you have, where you are.",
-                    "character": "Theodore Roosevelt",
+                    "character": {"id": "2", "name": "Theodore Roosevelt"},
                     "source": "Theodore Roosevelt",
                     "tags": [
                         {"id": "2", "name": "inspiration"},
