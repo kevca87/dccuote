@@ -5,6 +5,9 @@ import type { Quote } from "@/types/Quote";
 import { Input } from "@/components/ui/input";
 import CharactersCombobox from "@/components/CharactersCombobox";
 import type { ComboboxOptions } from "@/components/ui/combobox";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
 // TODO: Character
 
 export default function QuotesGrid({
@@ -28,8 +31,11 @@ export default function QuotesGrid({
 
   useEffect(() => {
     setFilteredQuotes(
-      quotes?.filter((quote) =>
-        quote.quote.toLowerCase().includes(searchQuery.toLowerCase()) && (!selectedCharacter || quote.character.name === selectedCharacter.label)
+      quotes?.filter(
+        (quote) =>
+          quote.quote.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          (!selectedCharacter ||
+            quote.character.name === selectedCharacter.label)
       ) || []
     );
   }, [searchQuery, quotes]);
@@ -43,7 +49,7 @@ export default function QuotesGrid({
       );
     }
   }, [selectedCharacter, quotes]);
-
+  const [deleteMode, setDeleteMode] = useState(false);
   return (
     <div>
       <div className="flex flex-row gap-2 justify-center">
@@ -58,10 +64,14 @@ export default function QuotesGrid({
           selectedCharacter={selectedCharacter}
           setSelectedCharacter={setSelectedCharacter}
         />
+        <div className="flex items-center space-x-2">
+          <Switch id="delete-mode" checked={deleteMode} onCheckedChange={setDeleteMode} />
+          <Label htmlFor="psicokiller-mode">Psicokiller Mode</Label>
+        </div>
       </div>
       <div className="flex flex-wrap gap-4 p-4 justify-center">
         {filteredQuotes.map((quote) => (
-          <QuoteCard key={quote.id} {...quote} />
+          <QuoteCard key={quote.id} quote={quote} deleteMode={deleteMode} />
         ))}
       </div>
     </div>

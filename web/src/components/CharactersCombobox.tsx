@@ -41,7 +41,7 @@ export default function CharactersCombobox({selectedCharacter, setSelectedCharac
   return (
               <Combobox
                 options={characters}
-                placeholder="Selecciona o crea un personaje"
+                placeholder="Selecciona un personaje"
                 selected={selectedCharacter?.value ?? ""}
                 onChange={handleSelect}
                 className={className}
