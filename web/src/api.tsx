@@ -32,3 +32,9 @@ export async function apiPost(endpoint: string, data: any) : Promise<any> {
         body: JSON.stringify(data),
     });
 }
+
+export async function apiDelete(endpoint: string) : Promise<any> {
+    return apiFetch(endpoint, {
+        method: "DELETE",
+    });
+}

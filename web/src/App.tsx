@@ -13,6 +13,7 @@ export default function App() {
     { success: true; data: any } | { success: false; error: string } | null
   >(null);
   const [quotes, setQuotes] = useState<Quote[]>([]);
+
   useEffect(() => {
     const fetchQuotes = async () => {
       const data = await apiFetch("/quotes");
@@ -20,9 +21,11 @@ export default function App() {
     };
     fetchQuotes();
   }, []);
+
   useEffect(() => {
     if (newQuoteSubmitResult && newQuoteSubmitResult.success) {
       console.log("New quote added:", newQuoteSubmitResult.data);
+      // TODO: tags returned as strings only, not full tag objects (API Fix)
       setQuotes((prevQuotes) => [...prevQuotes, newQuoteSubmitResult.data]);
     }
   }, [newQuoteSubmitResult]);
@@ -35,7 +38,7 @@ export default function App() {
       />
       <Routes>
         <Route path="/" element={<DailyQuote />} />
-        <Route path="/quotes" element={<QuotesGrid quotes={quotes} />} />
+        <Route path="/quotes" element={<QuotesGrid quotes={quotes} setQuotes={setQuotes}/>} />
         <Route path="/quotes/:id" element={<QuoteById />} />
       </Routes>
     </div>
