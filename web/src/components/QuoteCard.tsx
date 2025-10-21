@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 
 import type { Quote } from "@/types/Quote";
 
+import Tag from "./Tag";
+
 export default function QuoteCard({
   id,
   quote,
@@ -34,12 +36,7 @@ export default function QuoteCard({
       </CardHeader>
       <CardFooter className="overflow-x-auto">
         {tags.map((tag) => (
-          <div
-            key={tag.id}
-            className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 overflow-ellipsis hover:bg-gray-300 cursor-pointer"
-          >
-            {tag.name}
-          </div>
+          <Tag key={tag.id} id={tag.id} name={tag.name} />
         ))}
       </CardFooter>
     </Card>

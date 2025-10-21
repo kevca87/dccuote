@@ -20,6 +20,8 @@ export default function QuotesGrid({
     ComboboxOptions | undefined
   >();
 
+  // TODO: Add a way to undo filtering by character, select "All" or similar
+
   useEffect(() => {
     setFilteredQuotes(quotes || []);
   }, [quotes]);

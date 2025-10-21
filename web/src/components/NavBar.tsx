@@ -23,7 +23,7 @@ export default function NavBar({newQuoteSubmitResult, setNewQuoteSubmitResult}:
             <Link to="/quotes">Frases</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link to="/characters">Personajes</Link>
           </NavigationMenuLink>
@@ -32,7 +32,7 @@ export default function NavBar({newQuoteSubmitResult, setNewQuoteSubmitResult}:
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link to="/tags">Etiquetas</Link>
           </NavigationMenuLink>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
             <Link to="/">Frase diaria</Link>
