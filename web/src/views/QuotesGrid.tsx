@@ -8,8 +8,6 @@ import type { ComboboxOptions } from "@/components/ui/combobox";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-// TODO: Character
-
 export default function QuotesGrid({
   quotes,
   setQuotes,
@@ -66,12 +64,12 @@ export default function QuotesGrid({
         />
         <div className="flex items-center space-x-2">
           <Switch id="delete-mode" checked={deleteMode} onCheckedChange={setDeleteMode} />
-          <Label htmlFor="psicokiller-mode">Psicokiller Mode</Label>
+          <Label htmlFor="psicokiller-mode">Psycho Killer Mode</Label>
         </div>
       </div>
       <div className="flex flex-wrap gap-4 p-4 justify-center">
         {filteredQuotes.map((quote) => (
-          <QuoteCard key={quote.id} quote={quote} deleteMode={deleteMode} />
+          <QuoteCard key={quote.id} quote={quote} deleteMode={deleteMode} setQuotes={setQuotes} />
         ))}
       </div>
     </div>
