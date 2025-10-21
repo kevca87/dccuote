@@ -1,4 +1,4 @@
-export default function Tag({id, name}: {id: string; name: string}) {
+export default function TagBubble({id, name}: {id: string; name: string}) {
   return (
     <div
       key={id}
