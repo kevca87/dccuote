@@ -112,13 +112,18 @@ def quote_add(db: SQLAlchemy, quote: dict) -> None:
     
     db.session.add(Quote(id=new_quote_id, quote=quote["quote"], character_id=character_id, source=quote["source"]))
 
+    tags = []
     if "tags" in quote:
         for tag_name in quote["tags"]:
             tag = db.session.execute(select(Tag).filter(Tag.name == tag_name)).scalars().first()
             tag_id = tag.id if tag else None
             if tag_id is None:
                 tag_id = tag_add(db, tag_name)
-            db.session.add(QuoteTag(quote_id=new_quote_id, tag_id=tag_id))
+            quotetag = select(QuoteTag).filter(QuoteTag.quote_id == new_quote_id, QuoteTag.tag_id == tag_id)
+            existing_qt = db.session.execute(quotetag).scalars().first()
+            if existing_qt is None:
+                db.session.add(QuoteTag(quote_id=new_quote_id, tag_id=tag_id))
+            tags.append({'id': tag_id, 'name': tag_name})
 
     db.session.commit()
     return {
@@ -126,7 +131,7 @@ def quote_add(db: SQLAlchemy, quote: dict) -> None:
         "quote": quote["quote"],
         "character": {'id': character_id, 'name': quote["character"]},
         "source": quote["source"],
-        "tags": quote.get("tags", [])
+        "tags": tags
     }
 
 def quote_validate(quote: dict) -> dict:
@@ -153,7 +158,6 @@ def quote_validate(quote: dict) -> dict:
 
     # Validate tags if present
     if "tags" in quote:
-        new_tags = []
         if not isinstance(quote["tags"], list):
             return {"is_valid": False, "error": "Los tags deben ser una lista"}
         for tag in quote["tags"]:
@@ -200,3 +204,4 @@ def quote_tag_add(db: SQLAlchemy, quote_id: str, tag_id: str) -> None:
     """
     if not quote_tag_exists(db, quote_id, tag_id):
         db.session.add(QuoteTag(quote_id=quote_id, tag_id=tag_id))
+        db.session.commit()

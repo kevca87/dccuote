@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from src.models.models import Quote, Character, Tag, QuoteTag
-from sqlalchemy import select
+from sqlalchemy import select, delete
 import hashlib
 
 def tag_add(db: SQLAlchemy, tag_name: str) -> str:
@@ -29,7 +29,7 @@ def tag_delete(db: SQLAlchemy, tag_id: str) -> None:
     """
     Deletes a tag by ID
     """
-    db.session.execute(select(Tag).filter(Tag.id == tag_id)).delete()
+    db.session.execute(delete(Tag).filter(Tag.id == tag_id))
     db.session.commit()
 
 def tags_get(db: SQLAlchemy) -> list:

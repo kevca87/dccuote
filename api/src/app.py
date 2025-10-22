@@ -160,18 +160,28 @@ def delete_quote(quote_id):
         },
         {
             'name': 'tag',
-            'in': 'query',
-            'type': 'array',
-            'items': {'type': 'string'},
+            'in': 'body',
             'required': True,
-            'description': 'Tag names to add to the quote'
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'tags': {
+                        'type': 'array',
+                        'items': {'type': 'string'}
+                    }
+                },
+                'required': ['tags']
+            }
         }
     ],
     'responses': {
         201: {
             'description': 'Tags added to quote successfully',
             'examples': {
-                'application/json': {'message': 'Tags added to quote successfully'}
+                'application/json': [
+                    {"id": "2", "name": "inspiration"},
+                    {"id": "3", "name": "life"}
+                ]
             }
         },
         400: {
@@ -193,9 +203,18 @@ def add_tag_to_quote(quote_id):
     if not quote_id_exists(db, quote_id):
         return jsonify({"error": "Cita no encontrada"}), 404
 
-    tag_name = request.args.getlist("tag")
+    tag_name = request.json.get("tags", [])
     if not tag_name:
         return jsonify({"error": "No se proporcionó ninguna etiqueta"}), 400
+    
+    if not isinstance(tag_name, list):
+        return jsonify({"error": "El formato de las etiquetas es inválido"}), 400
+    
+    for t in tag_name:
+        if not isinstance(t, str):
+            return jsonify({"error": "El formato de las etiquetas es inválido"}), 400
+    
+    tags = []
 
     for tag in tag_name:
         if not tag_name_exists(db, tag):
@@ -203,7 +222,8 @@ def add_tag_to_quote(quote_id):
         else:
             tag_id = tag_id_get_by_name(db, tag)
         quote_tag_add(db, quote_id, tag_id)
-    return jsonify({"message": "Etiquetas añadidas a la cita con éxito"}), 201
+        tags.append({'id': tag_id, 'name': tag})
+    return jsonify(tags), 201
 
 # Get quotes with optional filters
 @swag_from({
