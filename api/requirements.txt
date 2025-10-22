@@ -3,3 +3,7 @@ flasgger
 pytest
 pytest-cov
 flask_cors
+sqlalchemy
+python-dotenv
+Flask-SQLAlchemy
+psycopg2-binary

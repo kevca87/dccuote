@@ -1,5 +1,4 @@
 
-
 def test_get_characters(client):
     resp = client.get('/characters')
     assert resp.status_code == 200

@@ -6,7 +6,8 @@ def test_daily_quote(client):
     assert resp.status_code == 200
     data = resp.get_json()
     assert set(data.keys()) == {"id", "quote", "character", "source", "tags"}
-    assert isinstance(data["character"], str)
+    assert isinstance(data["character"], dict)
+    assert {"id", "name"}.issubset(set(data["character"].keys()))
     assert isinstance(data["tags"], list)
     for t in data["tags"]:
         assert "id" in t and "name" in t
@@ -88,11 +89,11 @@ def test_delete_quote_404_not_found(client):
 
 def test_delete_quote_200_success(client):
     # delete an existing one
-    resp = client.delete('/quotes/delete/11')
+    resp = client.delete('/quotes/delete/q0c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3')
     assert resp.status_code == 200
     assert resp.get_json().get("message") == "Cita eliminada con éxito"
 
     # Verify it was deleted
     resp2 = client.get('/quotes')
     ids = [q["id"] for q in resp2.get_json()]
-    assert "11" not in ids
+    assert "q0c7b6a5f4e3d2c1b0a9f8e7d6c5b4a3" not in ids

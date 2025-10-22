@@ -1,45 +1,46 @@
-from .tmp_db import *
+from flask_sqlalchemy import SQLAlchemy
+from src.models.models import Quote, Character, Tag, QuoteTag
+from sqlalchemy import select
+import hashlib
 
-def tag_add(tag_name: str) -> str:
+def tag_add(db: SQLAlchemy, tag_name: str) -> str:
     """
     Adds a new tag if it doesn't exist
     and returns its ID.
     """
-    new_tag_id = str(len(tags) + 1)
-    tags.append({ "id": new_tag_id, "name": tag_name })
+    new_tag_id = hashlib.sha256(tag_name.encode()).hexdigest()
+    db.session.add(Tag(id=new_tag_id, name=tag_name))
+    db.session.commit()
     return new_tag_id
 
-def tag_name_exists(tag_name: str) -> bool:
+def tag_name_exists(db: SQLAlchemy, tag_name: str) -> bool:
     """
     Checks if a tag name already exists
     """
-    return any(t["name"] == tag_name for t in tags)
+    return db.session.execute(select(Tag).filter(Tag.name == tag_name)).scalars().first() is not None
 
-def tag_id_exists(tag_id: str) -> bool:
+def tag_id_exists(db: SQLAlchemy, tag_id: str) -> bool:
     """
     Checks if a tag ID exists
     """
-    return any(t["id"] == tag_id for t in tags)
+    return db.session.execute(select(Tag).filter(Tag.id == tag_id)).scalars().first() is not None
 
-def tag_delete(tag_id: str) -> None:
+def tag_delete(db: SQLAlchemy, tag_id: str) -> None:
     """
     Deletes a tag by ID
     """
-    global tags, quote_tags
-    quote_tags = [qt for qt in quote_tags if qt["tag_id"] != tag_id]
-    tags = [t for t in tags if t["id"] != tag_id]
+    db.session.execute(select(Tag).filter(Tag.id == tag_id)).delete()
+    db.session.commit()
 
-def tags_get() -> list:
+def tags_get(db: SQLAlchemy) -> list:
     """
     Returns all tags
     """
-    return tags
+    tags = db.session.execute(select(Tag)).scalars().all()
+    return [{'id': t.id, 'name': t.name} for t in tags]
 
-def tag_id_get_by_name(tag_name: str) -> str | None:
+def tag_id_get_by_name(db: SQLAlchemy, tag_name: str) -> str | None:
     """
     Returns a tag id by name or None if not found
     """
-    for t in tags:
-        if t["name"] == tag_name:
-            return t["id"]
-    return None
+    return db.session.execute(select(Tag.id).filter(Tag.name == tag_name)).scalars().first()

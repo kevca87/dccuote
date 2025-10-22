@@ -16,6 +16,9 @@ COPY src/ ./src
 # Copy the tests folder into the container
 COPY tests/ ./tests
 
+# Copy the db folder into the container
+COPY db/ ./db
+
 # Copy the pytest configuration file into the container
 COPY pytest.ini ./
 
