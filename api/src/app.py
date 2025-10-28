@@ -1,13 +1,24 @@
 from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger, swag_from
 from src.scripts.quotes import *
 from src.scripts.tags import *
 from src.scripts.characters import *
 from flask_cors import CORS
+import os
+
+host = os.environ.get('DB_HOST')
+user = os.environ.get('DB_USER')
+passw = os.environ.get('DB_PASSWORD')
+port = os.environ.get('DB_PORT')
+name = os.environ.get('DB_NAME')
 
 app = Flask(__name__)
 Swagger(app)
 CORS(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user}:{passw}@{host}:{port}/{name}'
+
+db = SQLAlchemy(app)
 
 #-----Quotes Endpoints-----#
 
@@ -36,7 +47,7 @@ CORS(app)
 })
 @app.route("/quotes/daily", methods=["GET"])
 def daily_quote():
-    quote = quote_daily()
+    quote = quote_daily(db)
     return jsonify(quote)
 
 # Add a new quote
@@ -96,10 +107,10 @@ def add_quote():
     if not validation['is_valid']:
         return jsonify({"error": validation['error']}), 400
     
-    if quote_exists(new_quote["quote"]):
+    if quote_exists(db, new_quote["quote"]):
         return jsonify({"error": "La cita ya existe"}), 409
 
-    new_quote = quote_add(new_quote)
+    new_quote = quote_add(db, new_quote)
 
     return jsonify(new_quote), 201
 
@@ -132,9 +143,9 @@ def add_quote():
 })
 @app.route("/quotes/delete/<quote_id>", methods=["DELETE"])
 def delete_quote(quote_id):
-    if not quote_id_exists(quote_id):
+    if not quote_id_exists(db, quote_id):
         return jsonify({"error": "Cita no encontrada"}), 404
-    quote_delete(quote_id)
+    quote_delete(db, quote_id)
     return jsonify({"message": "Cita eliminada con éxito"}), 200
 
 @swag_from({
@@ -149,18 +160,28 @@ def delete_quote(quote_id):
         },
         {
             'name': 'tag',
-            'in': 'query',
-            'type': 'array',
-            'items': {'type': 'string'},
+            'in': 'body',
             'required': True,
-            'description': 'Tag names to add to the quote'
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    'tags': {
+                        'type': 'array',
+                        'items': {'type': 'string'}
+                    }
+                },
+                'required': ['tags']
+            }
         }
     ],
     'responses': {
         201: {
             'description': 'Tags added to quote successfully',
             'examples': {
-                'application/json': {'message': 'Tags added to quote successfully'}
+                'application/json': [
+                    {"id": "2", "name": "inspiration"},
+                    {"id": "3", "name": "life"}
+                ]
             }
         },
         400: {
@@ -179,20 +200,30 @@ def delete_quote(quote_id):
 })
 @app.route("/quotes/<quote_id>/tags", methods=["POST"])
 def add_tag_to_quote(quote_id):
-    if not quote_id_exists(quote_id):
+    if not quote_id_exists(db, quote_id):
         return jsonify({"error": "Cita no encontrada"}), 404
 
-    tag_name = request.args.getlist("tag")
+    tag_name = request.json.get("tags", [])
     if not tag_name:
         return jsonify({"error": "No se proporcionó ninguna etiqueta"}), 400
+    
+    if not isinstance(tag_name, list):
+        return jsonify({"error": "El formato de las etiquetas es inválido"}), 400
+    
+    for t in tag_name:
+        if not isinstance(t, str):
+            return jsonify({"error": "El formato de las etiquetas es inválido"}), 400
+    
+    tags = []
 
     for tag in tag_name:
-        if not tag_name_exists(tag):
-            tag_id = tag_add(tag)
+        if not tag_name_exists(db, tag):
+            tag_id = tag_add(db, tag)
         else:
-            tag_id = tag_id_get_by_name(tag)
-        quote_tag_add(quote_id, tag_id)
-    return jsonify({"message": "Etiquetas añadidas a la cita con éxito"}), 201
+            tag_id = tag_id_get_by_name(db, tag)
+        quote_tag_add(db, quote_id, tag_id)
+        tags.append({'id': tag_id, 'name': tag})
+    return jsonify(tags), 201
 
 # Get quotes with optional filters
 @swag_from({
@@ -240,7 +271,7 @@ def get_quotes():
     character = request.args.get("character")
     tags = request.args.getlist("tag")
 
-    filtered_quotes = quotes_get(character, tags)
+    filtered_quotes = quotes_get(db, character, tags)
     return jsonify(filtered_quotes), 200
 
 @swag_from({
@@ -281,7 +312,7 @@ def get_quotes():
 })
 @app.route("/quotes/<quote_id>", methods=["GET"])
 def get_quote(quote_id):
-    quote = quote_get_by_id(quote_id)
+    quote = quote_get_by_id(db, quote_id)
     if quote is None:
         return jsonify({"error": "Cita no encontrada"}), 404
     return jsonify(quote), 200
@@ -317,9 +348,9 @@ def get_quote(quote_id):
 })
 @app.route("/tags/delete/<tag_id>", methods=["DELETE"])
 def delete_tag(tag_id):
-    if not tag_id_exists(tag_id):
+    if not tag_id_exists(db,tag_id):
         return jsonify({"error": "Etiqueta no encontrada"}), 404
-    tag_delete(tag_id)
+    tag_delete(db, tag_id)
     return jsonify({"message": "Etiqueta eliminada con éxito"}), 200
 
 # Get all tags
@@ -341,7 +372,7 @@ def delete_tag(tag_id):
 })
 @app.route("/tags", methods=["GET"])
 def get_tags():
-    all_tags = tags_get()
+    all_tags = tags_get(db)
     return jsonify(all_tags), 200
 
 #-----Characters Endpoint-----#
@@ -365,7 +396,7 @@ def get_tags():
 })
 @app.route("/characters", methods=["GET"])
 def get_characters():
-    all_characters = characters_get()
+    all_characters = characters_get(db)
     return jsonify(all_characters), 200
 
 if __name__ == "__main__":

@@ -1,14 +1,48 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env.test
     ports:
-      - "127.0.0.1:5000:5000"
+      - "5000:5000"
     volumes:
       - ./src:/app/src
     environment:
       - FLASK_APP=src/app.py
       - FLASK_ENV=development
+    
+    depends_on:
+      - db
+      - db_test
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=dccuote
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+
+  db_test:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=dccuote_test
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5438:5432"
+    volumes:
+      - db_test_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+
+volumes:
+  db_data: 
+    driver: local
+  db_test_data:
+    driver: local
