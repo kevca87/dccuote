@@ -17,9 +17,13 @@ import { test, expect, request } from '@playwright/test';
 //   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 // });
 
+const webBaseURL = 'http://localhost:5173';
+const apiBaseURL = 'http://localhost:5000';
+
 test('create quote', async ({ page }) => {
-  const apiBaseURL = 'http://localhost:5000'; // URL base de tu API Flask
-  await page.goto('http://localhost:5173/');
+   // URL base de tu API Flask
+  // await page.goto(`${webBaseURL}/`);
+  await page.goto(`/`);
 
   // Click the "Create Quote" button.
   await page.getByRole('button', { name: 'Nueva frase' }).click();
