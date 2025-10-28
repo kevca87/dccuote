@@ -36,6 +36,7 @@ Posteriormente posesionandose en la carpeta `web` siga los siguientes pasos para
     ```bash
     npx playwright test
     ```
+    (puede tardar un poco la primera vez, ya que creara un build sobre el cual ejecutara los tests)
 3. Ver el reporte generado por playwright
     ```
     npx playwright show-report
@@ -66,6 +67,9 @@ npx playwright show-report
 ```
 
 Puede ver mas comandos en https://playwright.dev/docs/intro
+
+No es necesario iniciar la app web manualmente (`npm run dev`) ya que Ya que en playwright.config.ts se configuró el webServer con la baseURL de la app: 'http://localhost:4173', es decir '/' apunta a 'http://localhost:4173'. Puedes ver el resto de la configuración en [playwright.config.ts](./playwright.config.ts)
+
 
 ### Crear nuevos tests
 Puede crear nuevos tests en la carpeta [tests](./tests/), ahi mismo podra encontrar el test de ejemplo visto en clases.
