@@ -105,7 +105,7 @@ export default function QuoteCard({
           <div>{character.name === source ? "" : `${source}`}</div>
         </CardDescription>
       </CardHeader>
-      <CardFooter className="overflow-x-auto">
+      <CardFooter className="overflow-x-hidden">
         {tags.map((tag) => (
           <TagBubble key={tag.id} id={tag.id} name={tag.name} />
         ))}

@@ -27,7 +27,7 @@ function AddTagDialog({quoteId, setSubmitResult}: { quoteId: string; setSubmitRe
       .map((tag) => tag.trim())
       .filter((tag) => tag.length > 0);
     const formData = {
-      tag: plainTags,
+      tags: plainTags,
     };
     console.log("Adding tags:", formData);
     apiPost(`/quotes/${quoteId}/tags`, formData)
@@ -84,15 +84,15 @@ function AddTagDialog({quoteId, setSubmitResult}: { quoteId: string; setSubmitRe
 
 function QuoteView({ id, quote, character, source, tags }: Quote) {
   const [addTagSubmitResult, setAddTagSubmitResult] = useState<
-    | { success: true; data: Quote }
+    | { success: true; data: Tag[] }
     | { success: false; error: string }
     | null
   >(null);
   const [showedTags, setShowedTags] = useState<Tag[]>(tags);
   useEffect(() => {
     if (addTagSubmitResult && addTagSubmitResult.success) {
-      console.log("Tags added:", addTagSubmitResult.data.tags);
-      setShowedTags([...showedTags, ...addTagSubmitResult.data.tags]);
+      console.log("Tags added:", addTagSubmitResult.data);
+      setShowedTags([...showedTags, ...addTagSubmitResult.data]);
     }
   }, [addTagSubmitResult]);
   return (

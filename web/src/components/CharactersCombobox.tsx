@@ -21,7 +21,7 @@ export default function CharactersCombobox({selectedCharacter, setSelectedCharac
 
   useEffect(() => {
     fetchCharacters().then((chars) => {
-      setCharacters(mapToComboboxOptions(chars));
+      setCharacters([{value: "Todos", label: "Todos"}, ...mapToComboboxOptions(chars)]);
     });
   }, []);
 

@@ -39,12 +39,15 @@ export default function QuotesGrid({
   }, [searchQuery, quotes]);
 
   useEffect(() => {
-    if (selectedCharacter) {
+    if (selectedCharacter && selectedCharacter.label !== "Todos") {
       setFilteredQuotes(
         quotes?.filter(
           (quote) => quote.character.name === selectedCharacter.label
         ) || []
       );
+    }
+    if (selectedCharacter?.label === "Todos") {
+      setFilteredQuotes(quotes || []);
     }
   }, [selectedCharacter, quotes]);
   const [deleteMode, setDeleteMode] = useState(false);
