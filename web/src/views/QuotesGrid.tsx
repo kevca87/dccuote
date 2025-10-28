@@ -1,5 +1,4 @@
 import QuoteCard from "@/components/QuoteCard";
-import { apiFetch } from "../api";
 import { useEffect, useState } from "react";
 import type { Quote } from "@/types/Quote";
 import { Input } from "@/components/ui/input";

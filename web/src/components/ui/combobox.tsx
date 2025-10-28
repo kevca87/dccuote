@@ -18,8 +18,6 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-
 export type ComboboxOptions = {
   value: string;
   label: string;
@@ -192,6 +190,7 @@ export function Combobox({
               {/* Select */}
               {options.map((option, index) => (
                 <CommandItem
+                  id={`combobox-option-${index}`}
                   key={option.label}
                   tabIndex={0}
                   value={option.label}

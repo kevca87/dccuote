@@ -1,17 +1,12 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
   navigationMenuTriggerStyle,
 } from "./ui/navigation-menu";
 import NewQuoteForm from "./NewQuoteForm";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 export default function NavBar({newQuoteSubmitResult, setNewQuoteSubmitResult}:
   { newQuoteSubmitResult: any; setNewQuoteSubmitResult: any }) {

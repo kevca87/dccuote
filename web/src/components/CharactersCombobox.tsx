@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Combobox } from "./ui/combobox";
 import type { ComboboxOptions } from "./ui/combobox";
-import { apiFetch, apiPost } from "@/api";
+import { apiFetch } from "@/api";
 
 function fetchCharacters() {
   return apiFetch("/characters");
@@ -27,15 +27,6 @@ export default function CharactersCombobox({selectedCharacter, setSelectedCharac
 
   function handleSelect(option: ComboboxOptions) {
     setSelectedCharacter(option);
-  }
-
-  function handleAppendGroup(label: ComboboxOptions["label"]) {
-    const newCharacter = {
-      value: label,
-      label,
-    };
-    characters.push(newCharacter);
-    handleSelect(newCharacter);
   }
 
   return (

@@ -1,7 +1,5 @@
 import {
   Card,
-  CardAction,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -25,8 +23,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { apiPost } from "@/api";
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 // TODO: Character
 

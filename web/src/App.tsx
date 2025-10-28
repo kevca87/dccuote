@@ -4,7 +4,7 @@ import DailyQuote from "./views/DailyQuote";
 import NavBar from "./components/NavBar";
 import { Toaster } from "@/components/ui/sonner";
 import QuoteById from "./views/QuoteById";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { apiFetch } from "./api";
 import type { Quote } from "@/types/Quote";
 
