@@ -14,5 +14,11 @@ export default function QuoteById() {
       apiFetch(`/quotes/${id}`).then(setQuote);
     }
   }, []);
+  useEffect(() => {
+    if (id !== "daily" && id !== "random") {
+      // Fetch the quote by ID and pass it to QuoteView
+      apiFetch(`/quotes/${id}`).then(setQuote);
+    }
+  }, [id]);
   return quote ? <QuoteView {...quote} /> : null;
 }
