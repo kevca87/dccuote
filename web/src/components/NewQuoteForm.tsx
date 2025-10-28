@@ -119,7 +119,7 @@ export default function NewQuoteForm(
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Nueva frase</Button>
+        <Button variant="outline" id="new-quote" name="new-quote">Nueva frase</Button>
       </DialogTrigger>
       <form>
         <DialogContent className="sm:max-w-[425px]">
@@ -132,7 +132,10 @@ export default function NewQuoteForm(
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
+              <Label htmlFor="quote">Frase</Label>
               <Textarea
+                id="quote"
+                name="quote"
                 value={quote}
                 onChange={(e) => setQuote(e.target.value)}
                 placeholder="No soy un pesimista Tulio, solo soy un optimista bien informado."
