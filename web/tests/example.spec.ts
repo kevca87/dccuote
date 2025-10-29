@@ -14,7 +14,7 @@ const apiContext = await request.newContext({
 // No es necesario iniciar la app web manualmente. Ya que en playwright.config.ts se configuró el webServer
 // con la baseURL de la app: 'http://localhost:4173', es decir '/' apunta a 'http://localhost:4173'
 
-test('crear frase', async ({ page }) => {
+test('añadir frase exitosamente', async ({ page }) => {
   await page.goto(`/`);
 
   await page.getByRole('button', { name: 'Nueva frase' }).click();

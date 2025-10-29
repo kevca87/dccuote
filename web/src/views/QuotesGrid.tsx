@@ -69,7 +69,7 @@ export default function QuotesGrid({
           <Label htmlFor="psicokiller-mode">Psycho Killer Mode</Label>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 p-4 justify-center">
+      <div data-testid="quotes-grid" className="flex flex-wrap gap-4 p-4 justify-center">
         {filteredQuotes.map((quote) => (
           <QuoteCard key={quote.id} quote={quote} deleteMode={deleteMode} setQuotes={setQuotes} />
         ))}

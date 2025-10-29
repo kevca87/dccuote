@@ -49,6 +49,11 @@ Ejecutar un solo test file
 npx playwright test example.spec.ts
 ```
 
+Ejecutar codegen, para generar los tests con UI
+```
+npx playwright codegen http://localhost:5173/
+```
+
 Ejecutar los tests en modo UI
 ```
 npx playwright test --ui
