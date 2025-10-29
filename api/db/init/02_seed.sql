@@ -7,7 +7,8 @@ INSERT INTO characters (id, name) VALUES
   ('c5c9b3e2f1d0a8b7c6e5d4c3f2a1b0e9', 'Gandalf'),
   ('c6d0c4f3a2e1b9c8d7f6e5d4a3b2c1f0', 'Elend Venture'),
   ('c7e1d5a4b3c2f0e9d8c7b6a5f4e3d2c1', 'Sazed'),
-  ('c8f2e6b5c4d3a1f0e9d8c7b6a5f4e3d2', 'Uncle Iroh');
+  ('c8f2e6b5c4d3a1f0e9d8c7b6a5f4e3d2', 'Uncle Iroh'),
+  ('c9g3f7b6a5f4e3d2c1b0a9f8e7d6c5b4', 'Aang');
 
 -- Insert tags
 INSERT INTO tags (id, name) VALUES

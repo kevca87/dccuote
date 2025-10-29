@@ -399,5 +399,47 @@ def get_characters():
     all_characters = characters_get(db)
     return jsonify(all_characters), 200
 
+# Delete a character by ID
+@swag_from({
+    'tags': ['Characters'],
+    'parameters': [
+        {
+            'name': 'character_id',
+            'in': 'path',
+            'type': 'string',
+            'required': True,
+            'description': 'ID of the character to delete'
+        }
+    ],
+    'responses': {
+        200: {
+            'description': 'Character deleted successfully',
+            'examples': {
+                'application/json': {'message': 'Character deleted successfully'}
+            }
+        },
+        400: {
+            'description': 'Character has associated quotes',
+            'examples': {
+                'application/json': {'error': 'Cannot delete character with associated quotes'}
+            }
+        },
+        404: {
+            'description': 'Character not found',
+            'examples': {
+                'application/json': {'error': 'Character not found'}
+            }
+        }
+    }
+})
+@app.route("/characters/delete/<character_id>", methods=["DELETE"])
+def delete_character(character_id):
+    if not character_id_exists(db, character_id):
+        return jsonify({"error": "Personaje no encontrado"}), 404
+    if character_has_quotes(db, character_id):
+        return jsonify({"error": "No se puede eliminar un personaje con citas asociadas"}), 400
+    character_delete(db, character_id)
+    return jsonify({"message": "Personaje eliminado con éxito"}), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
