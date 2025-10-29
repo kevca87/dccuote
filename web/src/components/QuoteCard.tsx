@@ -32,7 +32,7 @@ function DeleteConfirmationDialog({quoteId, quoteText, setIsDeleted}: { quoteId:
   const [open, setOpen] = useState(false);
   function handleDelete(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Deleting quote ID:", quoteId);
+    //console.log("Deleting quote ID:", quoteId);
     apiDelete(`/quotes/delete/${quoteId}`).then(() => {
       setIsDeleted(true);
       setOpen(false);
@@ -76,7 +76,7 @@ export default function QuoteCard({
   setQuotes,
 }: QuoteCardProps) {
   let { id, quote: quoteText, character, source, tags } = quote;
-  console.log("Rendering QuoteCard for quote ID:", quote.id);
+  //console.log("Rendering QuoteCard for quote ID:", quote.id);
   const navigate = useNavigate();
   function goToQuoteView(quoteId: string = "daily") {
     // Navigate to the quote view page
