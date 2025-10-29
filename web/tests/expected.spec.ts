@@ -55,7 +55,7 @@ test('crear frase', async ({ page }) => {
 
 });
 
-test('crear frase y ver en la lista', async ({ page }) => {
+test('crear frase exitosamente y ver en la lista', async ({ page }) => {
     await page.goto(`/`);
 
     await page.getByRole('button', { name: 'Nueva frase' }).click();
@@ -259,7 +259,7 @@ test('filtrar y volver a todos', async ({ page }) => {
     const uncleIrohQuotes = quotesGridFiltered.locator('[data-slot="card"]', { hasText: 'Uncle Iroh' });
     await expect(uncleIrohQuotes).toHaveCount(2);
 
-    await page.getByRole('combobox').click();
+    await page.getByRole('combobox').first().click();
     await page.getByRole('option', { name: 'Todos' }).click();
     await expect(page.getByTestId('quotes-grid')).not.toBeEmpty();
     const allQuotes = page.getByTestId('quotes-grid').locator('[data-slot="card"]');
