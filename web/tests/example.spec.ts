@@ -31,8 +31,12 @@ test('añadir frase exitosamente', async ({ page }) => {
   await page.getByRole('button', { name: 'Ver' }).click();
   await expect(page.getByText('La poderosa nueva frase de prueba')).toBeVisible();
 
+  // El estado de la base de datos se limpia al final de la prueba para no dejar datos residuales,
+  // evitar interferencias en otras pruebas y garantizar que la prueba se pueda repetir sin problemas.
   // Clean up: delete the created quote via API
   const quoteId = page.url().split('/').pop();
   await apiContext.delete(`/quotes/delete/${quoteId}`);
 
 });
+
+// Nota: Cuidado con crear la misma frase varias veces en tests diferentes y la paralelización de tests

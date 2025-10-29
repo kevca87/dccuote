@@ -24,7 +24,7 @@ export default function App() {
 
   useEffect(() => {
     if (newQuoteSubmitResult && newQuoteSubmitResult.success) {
-      console.log("New quote added:", newQuoteSubmitResult.data);
+      //console.log("New quote added:", newQuoteSubmitResult.data);
       // TODO: tags returned as strings only, not full tag objects (API Fix)
       setQuotes((prevQuotes) => [...prevQuotes, newQuoteSubmitResult.data]);
     }
