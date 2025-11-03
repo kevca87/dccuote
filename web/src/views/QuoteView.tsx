@@ -100,7 +100,7 @@ function QuoteView({ id, quote, character, source, tags }: Quote) {
       <h1 className="scroll-m-20 text-center text-4xl font-bold tracking-tight text-balance">
         {quote}
       </h1>
-      <p className="text-center text-xl text-muted-foreground">
+      <p className="text-center text-xl text-muted-foreground" data-testid={character.id}>
         - {character.name} {source === character.name ? null : `(${source})`}
       </p>
       <div className="mt-4">

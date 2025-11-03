@@ -39,4 +39,12 @@ test('añadir frase exitosamente', async ({ page }) => {
 
 });
 
+// Recuerda la existencia de la existencia de 
+// data-testid={character.id} en la vista de una frase
+// data-testid="quotes-grid" en el grid de frases
+// puede ser útil para seleccionar elementos en las pruebas.
+
+// Nota: Si agregas frases o personajes recuerda que puedes eliminarlos usando la API directamente, 
+// llamando a los endpoints correspondientes, para mejorar la independencia de las pruebas.
+
 // Nota: Cuidado con crear la misma frase varias veces en tests diferentes y la paralelización de tests
