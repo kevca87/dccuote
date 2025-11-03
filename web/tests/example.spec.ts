@@ -16,6 +16,10 @@ const apiContext = await request.newContext({
 
 test('añadir frase exitosamente', async ({ page }) => {
   await page.goto(`/`);
+  // Si le aparece un error durante la ejecución de los tests relacionado con config.webServer
+  // descomenta la siguiente línea y comenta la línea anterior; y en playwright.config.ts comenta el webServer (lineas 74-80)
+  // y corre los tests mientras la web app está corriendo en localhost:5173
+  // await page.goto(`http://localhost:5173`);
 
   await page.getByRole('button', { name: 'Nueva frase' }).click();
 

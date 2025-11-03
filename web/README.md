@@ -48,6 +48,24 @@ Posteriormente, posicionándose en la carpeta `web`, siga los siguientes pasos p
     npx playwright show-report
     ```
 
+Si todo salio bien deberia poder ver el siguiente mensaje en consola:
+```bash
+Running 1 test using 1 worker
+  1 passed (15.0s)
+
+To open last HTML report run:
+
+  npx playwright show-report
+```
+
+⚠️ Nota: Ejecutar los tests desde WSL puede generar problemas, se recomienda hacerlo desde la terminal nativa del sistema.
+
+⚠️ Nota: Si le aparece un error durante la ejecución de los tests relacionado con config.webServer, en [example.spec.ts](./tests/example.spec.ts) descomenta la línea 22 y comenta la línea 18; 
+y en [playwright.config.ts](./playwright.config.ts) comenta el webServer (lineas 74-80). Ahora para correr los tests, deberas asegurarte que la web app está corriendo en localhost:5173 con `npm run dev`
+```js
+await page.goto(`http://localhost:5173`);
+```
+
 A partir de ahora puede ejecutar comandos de **Playwright**, como por ejemplo:
 
 **Ejecutar un solo test file:**
